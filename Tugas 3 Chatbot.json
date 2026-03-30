@@ -1,0 +1,155 @@
+{
+  "name": "Tugas 3 Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi My Friend! 👋\nMy name is Ichan. Can I Help You?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d9bc60e8-b1a0-45c8-9437-7bfe18bd8228",
+      "name": "When chat message received",
+      "webhookId": "647fa97c-f654-44c8-bd7a-872a24095478"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Anda adalah chatbot AI untuk NF Academy.\n\nJawab pertanyaan tentang pelatihan berdasarkan data Google Sheets.\n\nKolom data:\n- Jenis Program Pelatihan\n- Nama Pelatihan/Kursus di NFA\n- Deskripsi Pelatihan/Kursus di NFA\n- Harga/Biaya\n\nGunakan data saja, jangan mengarang.\nJika tidak ada data, jawab dengan sopan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f6900d1b-60c7-45fe-8c0f-e72c22384303",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        112,
+        192
+      ],
+      "id": "8e9d0a1e-7f3d-408b-8c98-0f54089c8e91",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9Ix5RXexNRhA2BQo",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        256,
+        192
+      ],
+      "id": "b7dfa4d4-fe3d-4d57-bcab-008bb84cb241",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        192
+      ],
+      "id": "14d2a02b-ab03-4f7e-af18-d236014a3244",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "aqYs7XiuWvd7Kiw1",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d8400ea8-0625-4fce-b1e8-e8ff522fdc7b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "410adb91ccde81eab032df7db0255a137ce534736f9055f8914c2653795fbc43"
+  },
+  "id": "OEkPFdOi7ahzUgbC",
+  "tags": []
+}
